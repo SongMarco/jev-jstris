@@ -58,10 +58,17 @@ export function parseDecision(body: any, candidates: Placement[], latencyMs: num
   )
     throw new Error('INVALID_JEV_PROBABILITIES');
   const values = ids.map((id) => distribution[id] as number);
-  if (
-    Math.abs(values.reduce((a, b) => a + b, 0) - 1) > 0.01 ||
-    distribution[answer.choice] + 0.00001 < Math.max(...values)
-  )
+  const sum = values.reduce((a, b) => a + b, 0);
+  // Live Jev responses round probabilities to hundredths. Their displayed sum
+  // can differ from 1; accept only a distribution consistent with that rounding.
+  const hundredths = values.every(
+    (value) => Math.abs(value * 100 - Math.round(value * 100)) < 1e-9,
+  );
+  const lower = values.reduce((total, value) => total + Math.max(0, value - 0.005), 0);
+  const upper = values.reduce((total, value) => total + Math.min(1, value + 0.005), 0);
+  const validSum =
+    Math.abs(sum - 1) <= 1e-9 || (sum > 0 && hundredths && lower <= 1 + 1e-9 && upper >= 1 - 1e-9);
+  if (!validSum || distribution[answer.choice] + 0.00001 < Math.max(...values))
     throw new Error('INVALID_JEV_PROBABILITIES');
   if (
     !Number.isSafeInteger(body.usage?.input_tokens) ||

@@ -34,6 +34,19 @@ describe('policies', () => {
       usage: { input_tokens: 500 },
     });
   });
+  it.each([0.99, 1.01])('preserves rounded probabilities whose sum is %s', (sum) => {
+    const data = body();
+    data.answers.placement.probabilities[candidates[0].id] = 0.56;
+    data.answers.placement.probabilities[candidates[1].id] = Math.round((sum - 0.56) * 100) / 100;
+    const decision = parseDecision(data, candidates, 100);
+    expect(decision.probabilities).toEqual(data.answers.placement.probabilities);
+  });
+  it('rejects a sum error not explained by hundredth rounding', () => {
+    const data = body();
+    data.answers.placement.probabilities[candidates[0].id] = 0.561234;
+    data.answers.placement.probabilities[candidates[1].id] = 0.428765;
+    expect(() => parseDecision(data, candidates, 0)).toThrow('INVALID_JEV_PROBABILITIES');
+  });
   it.each(['unknown', 'distribution', 'negativeUsage', 'confidence'])(
     'rejects malformed %s',
     (kind) => {
