@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="run-token" content="RUN_TOKEN" />
+    <title>Jev × Jstris</title>
+    <link rel="stylesheet" href="/style.css" />
+    <script type="module" src="/app.js"></script>
+  </head>
+  <body>
+    <main>
+      <header>
+        <div>
+          <p class="eyebrow">DECISION LAB / 001</p>
+          <h1>Jev <span>×</span> Jstris</h1>
+          <p class="intro">한 블록, 한 번의 선택. 실제 게임에서 확인하는 의사결정.</p>
+        </div>
+        <span id="badge" class="badge">준비 중</span>
+      </header>
+      <section class="controls" aria-label="실행 설정">
+        <label
+          >선택 방식<select id="policy">
+            <option value="heuristic">로컬 휴리스틱 · 무료 검증</option>
+            <option value="random">랜덤 · 비교 기준</option>
+            <option value="jev" disabled>Jev · API 키 필요</option>
+          </select></label
+        >
+        <label
+          >게임<select id="mode">
+            <option value="practice">비공개 연습</option>
+            <option value="sprint40">40줄 스프린트</option>
+          </select></label
+        >
+        <button id="start" class="primary">새 게임 시작</button
+        ><button id="step">새 게임 한 수</button
+        ><button id="stop" class="danger" disabled>중단</button
+        ><button id="close">게임 창 닫기</button>
+      </section>
+      <p id="message" role="status">실행 상태를 불러오는 중입니다.</p>
+      <div class="workspace">
+        <section class="board-panel">
+          <div class="section-label">
+            <h2>마지막 관찰</h2>
+            <span id="piece">—</span>
+          </div>
+          <canvas id="board" width="300" height="600" aria-label="Jstris 보드 미리보기"></canvas>
+          <p class="muted">
+            조작은 별도 Jstris 창에서 진행됩니다.<br />게임 창의 포커스를 바꾸면 봇이 멈춥니다.
+          </p>
+        </section>
+        <div class="details">
+          <section class="metrics" aria-label="실행 지표">
+            <div>
+              <span>지운 줄</span><strong id="lines">0 <small>/ 40</small></strong>
+            </div>
+            <div><span>검증한 착지</span><strong id="locks">0</strong></div>
+            <div><span>선택 응답</span><strong id="latency">—</strong></div>
+            <div><span>추정 API 비용</span><strong id="cost">$0.0000</strong></div>
+          </section>
+          <section class="decision">
+            <div class="section-label">
+              <h2>마지막 선택</h2>
+              <span id="model">로컬 검증</span>
+            </div>
+            <p id="choice" class="choice">아직 선택하지 않았습니다.</p>
+            <p id="confidence" class="muted">선택 확률과 confidence는 게임 완주 확률이 아닙니다.</p>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>후보</th>
+                    <th>줄 삭제</th>
+                    <th>구멍</th>
+                    <th>최대 높이</th>
+                    <th>선택 확률</th>
+                  </tr>
+                </thead>
+                <tbody id="candidates">
+                  <tr>
+                    <td colspan="5">게임을 시작하면 후보가 표시됩니다.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <section class="notes">
+            <h2>실험 기록</h2>
+            <p id="log" class="muted">키 입력과 착지 결과를 로컬 파일에 기록합니다.</p>
+            <p id="tokens" class="muted">API 키는 로컬 서버에서만 사용합니다.</p>
+            <p class="muted">중단은 봇의 입력을 멈춥니다. 게임 자체의 중력은 계속 진행됩니다.</p>
+          </section>
+        </div>
+      </div>
+      <footer>
+        Jev chooses. Code checks. Jstris plays.<a
+          href="https://github.com/SongMarco/jev-jstris"
+          target="_blank"
+          rel="noreferrer"
+          >GitHub ↗</a
+        >
+      </footer>
+    </main>
+  </body>
+</html>
