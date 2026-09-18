@@ -95,7 +95,7 @@ export class JevPolicy implements Policy {
     private key: string,
     private model = MODEL,
     private request: typeof fetch = fetch,
-    private timeoutMs = 1000,
+    private timeoutMs = 3000,
   ) {
     if (!key.trim()) throw new Error('TYPESAFE_API_KEY_REQUIRED');
   }
@@ -107,21 +107,28 @@ export class JevPolicy implements Policy {
     const body = JSON.stringify(this.prepare(snapshot, candidates));
     if (Buffer.byteLength(body, 'utf8') > 24000) throw new Error('JEV_REQUEST_TOO_LARGE');
     const started = performance.now();
-    const response = await this.request('https://api.typesafe.ai/v1/systemone', {
-      method: 'POST',
-      redirect: 'error',
-      headers: { Authorization: `Bearer ${this.key}`, 'Content-Type': 'application/json' },
-      body,
-      signal: AbortSignal.any([signal, AbortSignal.timeout(this.timeoutMs)]),
-    });
-    if (!response.ok) {
-      await response.body?.cancel();
-      throw new Error(`JEV_HTTP_${response.status}`);
+    const timeout = AbortSignal.timeout(this.timeoutMs);
+    try {
+      const response = await this.request('https://api.typesafe.ai/v1/systemone', {
+        method: 'POST',
+        redirect: 'error',
+        headers: { Authorization: `Bearer ${this.key}`, 'Content-Type': 'application/json' },
+        body,
+        signal: AbortSignal.any([signal, timeout]),
+      });
+      if (!response.ok) {
+        await response.body?.cancel();
+        throw new Error(`JEV_HTTP_${response.status}`);
+      }
+      const data = await response.json();
+      const decision = parseDecision(data, candidates, performance.now() - started);
+      if (decision.model !== this.model) throw new Error('JEV_MODEL_MISMATCH');
+      return decision;
+    } catch (error) {
+      signal.throwIfAborted();
+      if (timeout.aborted) throw new Error('JEV_REQUEST_TIMEOUT');
+      throw error;
     }
-    const data = await response.json();
-    const decision = parseDecision(data, candidates, performance.now() - started);
-    if (decision.model !== this.model) throw new Error('JEV_MODEL_MISMATCH');
-    return decision;
   }
 }
 export class LocalPolicy implements Policy {

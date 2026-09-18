@@ -92,7 +92,21 @@ describe('policies', () => {
         candidates,
         new AbortController().signal,
       ),
-    ).rejects.toThrow();
+    ).rejects.toThrow('JEV_REQUEST_TIMEOUT');
+    expect(request).toHaveBeenCalledTimes(1);
+  });
+  it('accepts a response after the former one-second deadline', async () => {
+    const request = vi.fn<typeof fetch>().mockImplementation(async (_url, options) => {
+      await new Promise((resolve) => setTimeout(resolve, 1100));
+      options!.signal!.throwIfAborted();
+      return new Response(JSON.stringify(body()));
+    });
+    const decision = await new JevPolicy('test', MODEL, request).choose(
+      state,
+      candidates,
+      new AbortController().signal,
+    );
+    expect(decision.model).toBe(MODEL);
     expect(request).toHaveBeenCalledTimes(1);
   });
   it('marks the free comparison policy explicitly', async () => {

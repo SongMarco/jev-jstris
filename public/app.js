@@ -90,6 +90,7 @@ async function refresh() {
       COST_LIMIT: '설정한 비용 한도에 도달했습니다.',
       DECISION_LIMIT: '설정한 선택 횟수에 도달했습니다.',
       GAME_FOCUS_LOST: '게임 창의 포커스가 바뀌어 멈췄습니다.',
+      JEV_REQUEST_TIMEOUT: 'Jev 응답이 3초 안에 도착하지 않아 멈췄습니다. 새 게임을 시작해 주세요.',
     };
     text('badge', data.opening ? '연결 중' : phases[s?.phase] || '준비');
     text(

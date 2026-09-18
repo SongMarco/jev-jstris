@@ -44,7 +44,7 @@ cp .env.example .env
 
 Set `TYPESAFE_API_KEY` in `.env`, restart the server, then select Jev in the dashboard. The key stays in the Node process and is not injected into Jstris, returned to the dashboard, or stored in run logs. `.env` and `runs/` are ignored by Git.
 
-The default model is `jev-1.13.0`; `JEV_MODEL` may override it, but the response must report that exact version. Live authenticated inference and one 40-line completion have been verified; new accounts, locations, and repeated-game quality require their own validation. Default request timeout: 1 second. Per-run limits: 1,000 decisions and $0.25 estimated input cost; a full-context request allowance is reserved before each call. Cost uses the documented $0.042 / million input tokens and is an estimate, not a billing receipt.
+The default model is `jev-1.13.0`; `JEV_MODEL` may override it, but the response must report that exact version. Live authenticated inference and one 40-line completion have been verified; new accounts, locations, and repeated-game quality require their own validation. Default request timeout: 3 seconds; game identity and focus are still monitored while waiting, and the placement is revalidated before input. Per-run limits: 1,000 decisions and $0.25 estimated input cost; a full-context request allowance is reserved before each call. Cost uses the documented $0.042 / million input tokens and is an estimate, not a billing receipt.
 
 ## How it works
 

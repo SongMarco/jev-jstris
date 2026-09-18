@@ -39,3 +39,9 @@ This validation session made 143 API attempts: one initial placement, 36 attempt
 ## What remains unproven
 
 One completed game does not establish a completion rate or superiority over a heuristic. Repeated-game quality, matched-condition comparisons, account rate-limit behavior, other regions, and difficult top-out/hidden-row cases need further evaluation. The supported controls and conservative compatibility limits in the README still apply.
+
+## Replay timeout adjustment
+
+A later live replay stopped after 20 verified placements and 5 lines when the next API request exceeded the original 1-second deadline. The default is now 3 seconds. Timeouts receive the stable `JEV_REQUEST_TIMEOUT` reason and an explicit dashboard message. There is still no automatic retry or heuristic fallback. The existing identity/focus monitor and placement revalidation remain active during longer waits.
+
+The changed build passed all 52 tests, including a response arriving after 1.1 seconds and an enforced timeout. Its live replay verified 94 placements and cleared 29 lines, then stopped with `STATE_CHANGED_DURING_DECISION`. The last request snapshot had manual revision 2; the final observation had revision 3 with the same epoch and piece sequence and active/focused state. The bridge therefore detected an input or focus event; the trace does not distinguish which event. This replay did not complete 40 lines. Maximum successful API latency was 541.1 ms, so live handling of a response over 1 second remains covered by the simulated regression test, not this replay. Known input usage was 199,387 tokens ($0.008374254 estimated), with one interrupted request of unknown usage.
