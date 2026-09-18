@@ -1,0 +1,25 @@
+{
+  "name": "jev-jstris",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Jev chooses placements, Jstris plays them through real keyboard input.",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node --env-file-if-exists=.env dist/cli.js",
+    "test": "vitest run",
+    "check": "tsc --noEmit",
+    "verify": "npm run check && npm test && npm run build"
+  },
+  "dependencies": {
+    "playwright": "^1.63.0"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.1",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.1"
+  }
+}
