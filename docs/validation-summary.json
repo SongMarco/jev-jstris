@@ -1,0 +1,18 @@
+{
+  "observedDate": "2026-09-18",
+  "clientVersion": "1.40.1",
+  "gameAssetId": "6edfa3a78423ea5d4e68",
+  "policy": "local-heuristic",
+  "modelInference": false,
+  "mode": "sprint40",
+  "result": "SPRINT_COMPLETE",
+  "verifiedLocks": 105,
+  "clearedLines": 40,
+  "keyboardInputs": 420,
+  "apiCalls": 0,
+  "apiInputTokens": 0,
+  "apiCostUSD": 0,
+  "candidateShuffleSeed": 42,
+  "jstrisBagSeed": "not controlled",
+  "traceSha256": "4cd38f6105a093a949edd048f58d01e3e155e6cb10cab0fed1dec4a851be094e"
+}
