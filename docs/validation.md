@@ -1,6 +1,6 @@
 # Implementation validation — 2026-09-18
 
-This is an initial implementation checkpoint, not a Jev performance benchmark.
+This records the key-free implementation checkpoint. Subsequent real Jev execution is documented in [jev-live-validation.md](jev-live-validation.md). Neither is a comparative performance benchmark.
 
 ## Real Jstris
 
@@ -21,7 +21,7 @@ Final boundary hardening adds an explicit rejection for occupied above-board `de
 
 ## Automated verification
 
-`npm run verify` runs formatting, TypeScript checking, **48 tests**, and a production build. No real API credentials or live service access are used by the tests.
+`npm run verify` runs formatting, TypeScript checking, **51 tests**, and a production build. No real API credentials or live service access are used by the tests.
 
 - Empty-board reachable placements for all seven pieces, line deletion, I wall kicks, T floor kicks, above-board lock rejection, and reproducible candidate ordering.
 - Read-only snapshots, consecutive identical pieces, preparation/restart, intervention tracking, stale keydown blocking, terminal-board capture, and populated deadline rejection.
@@ -31,11 +31,11 @@ Final boundary hardening adds an explicit rejection for occupied above-board `de
 
 The mock game validates controller behavior; it is not evidence that Jstris physics matches. The separate real-client runs provide that evidence for the tested paths.
 
-## Ready for the API key
+## Jev integration
 
 Implemented: server-only bearer authentication, pinned model version, one Choice per piece, response validation, 1-second timeout, no implicit fallback/retry, cancellation, probability and token display, cost limits, and local decision records.
 
-Pending: first successful live Jev response, actual account/rate limits, regional latency, model quality, confidence analysis, and repeated matched-condition comparison runs. Do not interpret the local heuristic's 40-line completion as Jev completion.
+Real authenticated Jev responses and a separate 40-line completion are now verified; see [live results](jev-live-validation.md). Broader account/rate limits, latency across regions, confidence analysis, and repeated matched-condition comparison runs remain pending. The local heuristic and Jev runs have separate evidence.
 
 ## Deliberate limits
 

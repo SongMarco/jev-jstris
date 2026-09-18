@@ -4,7 +4,7 @@
 
 Jev chooses a reachable Tetris placement. A local controller executes it in **the real Jstris browser game**, with keyboard input and a board check after every lock.
 
-**Current status:** the free local heuristic completed a real 40-line sprint with 105 verified locks. Jev integration is implemented and tested with mock HTTP responses; **no live Jev inference has been run yet**. [Validation details](docs/validation.md).
+**Current status:** both the free local heuristic and **the real `jev-1.13.0` model** completed a Jstris 40-line sprint. The Jev run used 105 decisions, with every landing verified; mean API latency was 263.5 ms and estimated input cost was $0.00935634. This is one live validation run, not a completion-rate benchmark. [Jev live results](docs/jev-live-validation.md) · [Implementation validation](docs/validation.md).
 
 ## Run without an API key
 
@@ -36,7 +36,7 @@ The three policies are distinct:
 
 Missing keys and failed Jev requests **never fall back to the heuristic**. The candidate-order seed is logged; it is not the Jstris bag seed.
 
-## Connect Jev later
+## Connect Jev
 
 ```sh
 cp .env.example .env
@@ -44,7 +44,7 @@ cp .env.example .env
 
 Set `TYPESAFE_API_KEY` in `.env`, restart the server, then select Jev in the dashboard. The key stays in the Node process and is not injected into Jstris, returned to the dashboard, or stored in run logs. `.env` and `runs/` are ignored by Git.
 
-The default model is `jev-1.13.0`; `JEV_MODEL` may override it, but the response must report that exact version. The first real API response, account access, latency, and play quality still need live validation. Default request timeout: 1 second. Per-run limits: 1,000 decisions and $0.25 estimated input cost; a full-context request allowance is reserved before each call. Cost uses the documented $0.042 / million input tokens and is an estimate, not a billing receipt.
+The default model is `jev-1.13.0`; `JEV_MODEL` may override it, but the response must report that exact version. Live authenticated inference and one 40-line completion have been verified; new accounts, locations, and repeated-game quality require their own validation. Default request timeout: 1 second. Per-run limits: 1,000 decisions and $0.25 estimated input cost; a full-context request allowance is reserved before each call. Cost uses the documented $0.042 / million input tokens and is an estimate, not a billing receipt.
 
 ## How it works
 
@@ -84,7 +84,7 @@ Run records are JSONL under `runs/`: observations, candidate order/seed, prepare
 - No hold, 180° rotations, soft-drop tucks, multiplayer, custom rules, or automatic resume in this initial version. Candidate coverage is intentionally limited to supported paths.
 - Jstris stores an above-board `deadline` row separately. The adapter rejects any occupied deadline/hidden row until its full top-out contract is supported; it never silently drops those cells.
 - The dashboard shows the **last observed** board; it is not a continuous mirror after the runner stops.
-- Initial smoke validation is a small sample, not a completion-rate benchmark. Jev quality, region-specific latency, and extended stress testing remain pending.
+- Initial smoke validation is a small sample, not a completion-rate benchmark. Repeated-game Jev quality, latency across regions, and extended stress testing remain pending.
 
 See [design](docs/design.md), [state-reading evidence](docs/jstris-live-state-verification.md), and [implementation validation](docs/validation.md).
 

@@ -1,0 +1,27 @@
+{
+  "observedDate": "2026-09-18",
+  "implementationCommit": "786d3a2",
+  "clientVersion": "1.40.1",
+  "gameAssetId": "6edfa3a78423ea5d4e68",
+  "policy": "jev",
+  "model": "jev-1.13.0",
+  "mode": "sprint40",
+  "result": "SPRINT_COMPLETE",
+  "apiRequests": 105,
+  "verifiedLocks": 105,
+  "clearedLines": 40,
+  "inputTokens": 222770,
+  "outputTokens": 26400,
+  "estimatedCostUSD": 0.00935634,
+  "usageUnknown": 0,
+  "modelLatencyMs": {
+    "mean": 263.5,
+    "median": 238.9,
+    "p95NearestRank": 404.1,
+    "min": 195.8,
+    "max": 778.1
+  },
+  "controllerRunSeconds": 31.795,
+  "jstrisBagSeed": "not controlled",
+  "traceSha256": "b1347cf06ce4dd5f9fd2589b10df6ec82a4c47bcfd0e27ec2bdd5133ab855de9"
+}
