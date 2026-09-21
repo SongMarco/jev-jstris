@@ -12,7 +12,12 @@ const colors = [
   '#b68be2',
 ];
 const text = (id, value) => {
-  $(id).textContent = value;
+  const element = $(id);
+  const next = String(value);
+  if (element.textContent !== next) element.textContent = next;
+};
+const setDisabled = (element, disabled) => {
+  if (element.disabled !== disabled) element.disabled = disabled;
 };
 let busy = false;
 async function command(path, body = {}) {
@@ -75,13 +80,15 @@ async function refresh() {
     const response = await fetch('/api/state');
     const data = await response.json();
     const s = data.state;
-    document.querySelector('option[value="jev"]').disabled = !data.readyForJev;
-    document.querySelector('option[value="jev"]').textContent = data.readyForJev
-      ? 'Jev · AI 선택'
-      : 'Jev · API 키 필요';
+    // Rewriting native select options or disabled state closes Chrome's open menu.
+    // Polling must leave the controls alone unless their state actually changes.
+    const jevOption = document.querySelector('option[value="jev"]');
+    setDisabled(jevOption, !data.readyForJev);
+    const jevLabel = data.readyForJev ? 'Jev · AI 선택' : 'Jev · API 키 필요';
+    if (jevOption.textContent !== jevLabel) jevOption.textContent = jevLabel;
     for (const id of ['start', 'step', 'policy', 'mode'])
-      $(id).disabled = busy || data.opening || data.running;
-    $('stop').disabled = !data.opening && !data.running;
+      setDisabled($(id), busy || data.opening || data.running);
+    setDisabled($('stop'), !data.opening && !data.running);
     const reasons = {
       STEP_COMPLETE: '한 수를 실행하고 착지를 확인했습니다.',
       SPRINT_COMPLETE: '40줄 스프린트를 완료했습니다.',
